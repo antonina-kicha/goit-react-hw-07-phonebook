@@ -1,6 +1,6 @@
 import { Formik, Field, Form } from 'formik';
 import styled from 'styled-components';
-import { FormWrapper, Button } from './ContactForm.styled'
+import { FormWrapper, Button, Error } from './ContactForm.styled'
 
 import { useState } from 'react';
 
@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import {addContact} from 'redux/operations'
 
 const Input = styled(Field)`
-    width: 250px;
+    width: 350px;
     height: 20px;
     `;
 const FormWithStyle = styled(Form)`
@@ -22,11 +22,14 @@ export const ContactForm = () => {
 
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
+    const [error, setError] = useState('');
+
 
     const dispatch = useDispatch();
 
     const handleInputChange = evt => {
         console.log(evt.currentTarget.name);
+      
         switch (evt.currentTarget.name) {
             case "name":
                 setName(evt.currentTarget.value);
@@ -41,6 +44,10 @@ export const ContactForm = () => {
 
     const handleSubmit = evt => {
         // evt.preventDefault();
+          if (!name || !phone) {
+            setError('Please fill out all contact information...');
+            return;
+        }
         dispatch(addContact(({name, phone})));
         console.log(name, phone);
         resetForm();
@@ -49,6 +56,7 @@ export const ContactForm = () => {
     const resetForm = () => {
         setName('');
         setPhone('');
+        setError('');
     }
 
     return (
@@ -81,7 +89,9 @@ export const ContactForm = () => {
         <Button type="submit" >Add contact</Button>
       </FormWithStyle>
             </Formik>
-            </FormWrapper>
+            {error && <Error>{error}</Error>}
+        </FormWrapper>
+        
     )
 }
 
