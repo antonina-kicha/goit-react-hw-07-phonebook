@@ -5,7 +5,7 @@ import { FormWrapper, Button } from './ContactForm.styled'
 import { useState } from 'react';
 
 import { useDispatch } from "react-redux";
-import {addContact} from 'redux/contactsSlice.jsx'
+import {addContact} from 'redux/operations'
 
 const Input = styled(Field)`
     width: 250px;
@@ -21,7 +21,7 @@ const FormWithStyle = styled(Form)`
 export const ContactForm = () => {
 
     const [name, setName] = useState('');
-    const [number, setNumber] = useState('');
+    const [phone, setPhone] = useState('');
 
     const dispatch = useDispatch();
 
@@ -31,8 +31,8 @@ export const ContactForm = () => {
             case "name":
                 setName(evt.currentTarget.value);
                 break;
-            case "number":
-                setNumber(evt.currentTarget.value);
+            case "phone":
+                setPhone(evt.currentTarget.value);
                 break;
             default:
                 return;
@@ -41,20 +41,20 @@ export const ContactForm = () => {
 
     const handleSubmit = evt => {
         // evt.preventDefault();
-        dispatch(addContact(name, number));
-        console.log(name, number);
+        dispatch(addContact(({name, phone})));
+        console.log(name, phone);
         resetForm();
     }
 
     const resetForm = () => {
         setName('');
-        setNumber('');
+        setPhone('');
     }
 
     return (
       <FormWrapper>
         <Formik
-        initialValues={{name: '', number: ''}}
+        initialValues={{name: '', phone: ''}}
       onSubmit={handleSubmit}
     >
       <FormWithStyle autoComplete = "off">
@@ -68,15 +68,15 @@ export const ContactForm = () => {
                     pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
                     value={name} onChange={handleInputChange} />
 
-            <label htmlFor="number">
+            <label htmlFor="phone">
                 Contacts
             </label>
                 <Input
-                    id="number"
-                    name="number"
+                    id="phone"
+                    name="phone"
                     type="tel"
                     pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-                    value={number} onChange={handleInputChange} />
+                    value={phone} onChange={handleInputChange} />
 
         <Button type="submit" >Add contact</Button>
       </FormWithStyle>
